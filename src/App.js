@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import { useContext, useState } from "react";
+import { ethers } from "ethers";
+import {useNavigate} from "react-router-dom";
+import StateContext from "./StateContext";
 function App() {
+  const contractAddress = "0x2bD6A3837D70F91D9F6565760998724a9bB0D9CB";
+  const {account,setAccount, isWalletConnected,setWalletConnected}=useContext(StateContext)
+  const navigate=useNavigate();
+  async function connectToWallet() {
+    const { ethereum } = window;
+    if (!ethereum) {
+      alert("please install metamask first to use our website");
+    } else {
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      setAccount(accounts[0]);
+      alert("Successfully connected to wallet")
+      setWalletConnected(true)
+      console.log("account: "+accounts[0])
+      navigate("/sendMessage")
+    }
+  }
+ 
+  {
+    /* <button class="button-64" role="button">
+  <span class="text">Button 64</span>
+</button>; */
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div id="ConnectionPage">
+          <div id="introMsg">
+            Want to Exchange Message Securely?
+            <br />
+            Then Start by clicking connect below
+          </div>
+          <button class="button-64" role="button" onClick={connectToWallet}>
+            <span class="text">Connect</span>
+          </button>
     </div>
   );
 }
